@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "microservices-chart.fullname" . }}-service-a
+spec:
+  replicas: {{ .Values.replicaCountA }}
+  selector:
+    matchLabels:
+      app: service-a
+  template:
+    metadata:
+      labels:
+        app: service-a
+    spec:
+      containers:
+        - name: service-a
+          image: "{{ .Values.image.repositoryA }}:{{ .Values.image.tagA }}"
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          env:
+            - name: SERVICE_B_URL
+              value: "http://service-b.prod.svc.cluster.local:5000"
+          resources:
+            limits:
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
