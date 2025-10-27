@@ -50,9 +50,9 @@ git push -u origin main
 
 If you don’t use gh, create repo in GitHub UI and follow the push instructions.
 
-7. Quick production hardening checklist (things to add after POC)
+## Quick production hardening checklist (things to add after POC)
 
-Use private subnets and NAT for outbound.
+**Use private subnets and NAT for outbound.
 
 Manage credentials with IRSA (IAM Roles for Service Accounts) — no nodes with broad IAM.
 
@@ -70,15 +70,15 @@ Add Prometheus / Grafana, Fluentd/CloudWatch, and tracing (Jaeger/X-Ray).
 
 Add network policies, pod security policies (PSA), and resource quotas.
 
-Add integration tests and security scanning (Trivy, kube-bench, Snyk).
+Add integration tests and security scanning (Trivy, kube-bench, Snyk).**
 
 
-8. IAM / GitHub secrets recommended permissions (minimum)
+## IAM / GitHub secrets recommended permissions (minimum)
 
-ECR Push rights (ecr:BatchGetImage, ecr:PutImage, ecr:InitiateLayerUpload, ecr:CompleteLayerUpload, ecr:GetAuthorizationToken)
+ECR Push rights (**ecr:BatchGetImage, ecr:PutImage, ecr:InitiateLayerUpload, ecr:CompleteLayerUpload, ecr:GetAuthorizationToken**)
 
-EKS Describe and Update kubeconfig (eks:DescribeCluster)
+EKS Describe and Update kubeconfig (**eks:DescribeCluster**)
 
-EC2/VPC creation (for infra via Terraform) — ideally restrict to infra account.
+EC2/VPC creation (**for infra via Terraform**) — ideally restrict to infra account.
 
 Use separate IAM user/role per environment.
