@@ -1,1 +1,20 @@
+replicaCountA: 2
+replicaCountB: 2
+
+image:
+  repositoryA: "<AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/service-a"
+  tagA: "latest"
+  repositoryB: "<AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/service-b"
+  tagB: "latest"
+
+service:
+  port: 5000
+
+resources:
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+  requests:
+    cpu: "250m"
+    memory: "256Mi"
 
