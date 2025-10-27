@@ -32,3 +32,53 @@ terraform apply -var="region=us-east-1"
 - Configure centralized logging (Fluentd -> CloudWatch/ELK) and metrics (Prometheus / Grafana).
 - Setup canary or blue/green deployment workflow (Argo Rollouts or flagging).
 - Add network policies and pod security admission controls, resource quotas, and limit ranges.
+
+6. How to create the GitHub repo and push (easy)
+
+Assuming you have git and gh (GitHub CLI) installed and authenticated.
+
+# create local folder and files (paste files from above)
+mkdir monolith-to-microservices-k8s
+cd monolith-to-microservices-k8s
+# create folders and files as per structure...
+git init
+git add .
+git commit -m "Initial commit: monolith->microservices demo, k8s + infra + CI/CD"
+gh repo create skalamgir/monolith-to-microservices-k8s --public --source=. --remote=origin
+git push -u origin main
+
+
+If you don’t use gh, create repo in GitHub UI and follow the push instructions.
+
+7. Quick production hardening checklist (things to add after POC)
+
+Use private subnets and NAT for outbound.
+
+Manage credentials with IRSA (IAM Roles for Service Accounts) — no nodes with broad IAM.
+
+Replace long-lived AWS keys in GitHub with OIDC integrations.
+
+Use Helm charts (templated manifests) for parameterization & versioning.
+
+Add Terraform state backend (S3 + DynamoDB locking) — do not store state locally.
+
+Add autoscaling groups + cluster autoscaler for worker nodes.
+
+Add canary or blue/green deploys (Argo Rollouts, Flagger).
+
+Add Prometheus / Grafana, Fluentd/CloudWatch, and tracing (Jaeger/X-Ray).
+
+Add network policies, pod security policies (PSA), and resource quotas.
+
+Add integration tests and security scanning (Trivy, kube-bench, Snyk).
+
+
+8. IAM / GitHub secrets recommended permissions (minimum)
+
+ECR Push rights (ecr:BatchGetImage, ecr:PutImage, ecr:InitiateLayerUpload, ecr:CompleteLayerUpload, ecr:GetAuthorizationToken)
+
+EKS Describe and Update kubeconfig (eks:DescribeCluster)
+
+EC2/VPC creation (for infra via Terraform) — ideally restrict to infra account.
+
+Use separate IAM user/role per environment.
