@@ -38,10 +38,10 @@ module "vpc" {
   private_subnets = ["10.0.11.0/24","10.0.12.0/24"]
 }
 
-Important production notes:
+#Important production notes:
 
-Use the official terraform-aws-modules/eks/aws module (as used above) with fine-grained config (private subnets, managed nodegroups, Fargate profiles if desired).
+#Use the official terraform-aws-modules/eks/aws module (as used above) with fine-grained config (private subnets, managed nodegroups, Fargate profiles if desired).
 
-Add aws_iam_role for IRSA (IAM Roles for Service Accounts) and map OIDC provider — use it to grant specific pod permissions (S3, SSM, etc.).
+#Add aws_iam_role for IRSA (IAM Roles for Service Accounts) and map OIDC provider — use it to grant specific pod permissions (S3, SSM, etc.).
 
-Enable control plane logging only as required, configure node autoscaling groups, and use separate AWS accounts for environments.
+#Enable control plane logging only as required, configure node autoscaling groups, and use separate AWS accounts for environments.
