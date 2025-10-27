@@ -1,1 +1,50 @@
+name: Build & Deploy to EKS
 
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_A: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/service-a
+      IMAGE_B: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/service-b
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build & push service-a
+        run: |
+          docker build -t $IMAGE_A:latest ./services/service-a
+          docker push $IMAGE_A:latest
+
+      - name: Build & push service-b
+        run: |
+          docker build -t $IMAGE_B:latest ./services/service-b
+          docker push $IMAGE_B:latest
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to EKS (kubectl apply)
+        run: |
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/service-b-deployment.yaml
+          kubectl apply -f k8s/service-b-service.yaml
+          kubectl apply -f k8s/service-a-deployment.yaml
+          kubectl apply -f k8s/service-a-service.yaml
+          kubectl apply -f k8s/hpa-service-a.yaml
+          kubectl apply -f k8s/ingress.yaml
