@@ -1,1 +1,6 @@
+apiVersion: v2
+name: microservices-chart
+description: Chart to deploy service-a and service-b
+version: 0.1.0
+appVersion: "1.0.0"
 
