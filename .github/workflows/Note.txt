@@ -1,1 +1,21 @@
+This workflow:
 
+Builds images for service-a and service-b
+
+Pushes to ECR
+
+Updates Kubernetes image via kubectl set image (or creates new manifest apply)
+
+Requires AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, AWS_ACCOUNT_ID, and KUBE_CONFIG (we’ll show how to create kubeconfig in Actions using aws eks update-kubeconfig)
+
+Secrets you must set in GitHub repo (Settings → Secrets → Actions):
+
+AWS_REGION (e.g. us-east-1)
+
+AWS_ACCOUNT_ID
+
+AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY (IAM user with ECR/EKS permissions or use OIDC short-lived creds)
+
+EKS_CLUSTER_NAME
+
+Production tip: Use GitHub Actions OIDC to avoid long-lived AWS keys: configure the trust between GitHub OIDC and AWS IAM role and use aws-actions/configure-aws-credentials with role-to-assume. This is more secure.
